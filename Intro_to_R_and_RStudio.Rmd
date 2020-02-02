@@ -60,7 +60,7 @@ library(tidyverse)
 
 Generally, when you work in R, it's best to create a 'Project' in RStudio to make sure your installed packages, files and all other pieces are in one place. While we aren’t creating a project for this class, we will go partway – we’ll set a working directory. The directory we’ll use is wherever the IRE-NICAR staff placed our data. To set the working directory go to the Session menu and click on Set Working Directory. We’ll then look for the correct directory. Best practice: never code a hard-path to setwd() into your script - it'll work on your machine, but won't on anyone else's.
 
-```{r library}
+```{r getwd}
 getwd()
 #setwd()
 ```
@@ -234,6 +234,7 @@ In the case_when function you will see the _~_, which can be read as "then".
 You will also see a new operator called _%in%_ . We use this when we want to ask if a value is equal to any one of many values. And we also see the _!_ operator. You may know that this means "not", but in R the _!_ operator can sometimes go in places you're not accustomed to seeing it.
 
 So this can be read as: 
+
 1. "Start with the census dataframe ...
 2. "and create a new column called region ...
 3. "and insert "NOLA Region" as the value of the new region column anytime the value of the Geography column is in the set of values in NOLA_Region. ...
