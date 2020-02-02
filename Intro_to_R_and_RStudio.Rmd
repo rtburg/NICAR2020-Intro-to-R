@@ -1,7 +1,7 @@
 ---
-title: 'NICAR 2019 - R1: Intro to R and RStudio'
-author: "Meghan Hoyer"
-date: "3/7/2019"
+title: 'NICAR 2020 - R1: Intro to R and RStudio'
+author: "Meghan Hoyer & Ryan Thornburg"
+date: "3/7/2020"
 output: html_document
 ---
 
@@ -46,23 +46,23 @@ Here's a primer:
 ### Setting Up Your Work
 Since R is open-source, it is free. You can download R and most packages at CRAN, the Comprehensive R Archive Network. Installing and loading packages is a two-step process. To install the tidyverse, for example, you would enter the following commands at the console - note the quotes around the package name:
 
-```{tidyverse}
-install.packages("tidyverse")
+```{r tidyverse}
+#install.packages("tidyverse")
 ```
 
 IRE-NICAR staff has already installed R, R Studio and the tidyverse on the computers we’ll be using in this class. But whenever you start R, you must do step 2: loading the packages you need in memory. All library calls should be included at the top of your scripts; that way, anyone using your code can see and load all the necessary packages to run your code.
 
 So - let's open a new script (File -> New File -> R Script) and load the tidyverse package so we can get to work. Note for library calls there are no quotes around the library name.
 
-```{library}
+```{r library}
 library(tidyverse)
 ```
 
 Generally, when you work in R, it's best to create a 'Project' in RStudio to make sure your installed packages, files and all other pieces are in one place. While we aren’t creating a project for this class, we will go partway – we’ll set a working directory. The directory we’ll use is wherever the IRE-NICAR staff placed our data. To set the working directory go to the Session menu and click on Set Working Directory. We’ll then look for the correct directory. Best practice: never code a hard-path to setwd() into your script - it'll work on your machine, but won't on anyone else's.
 
-```{library}
+```{r library}
 getwd()
-setwd()
+#setwd()
 ```
 
 ### R Syntax
@@ -88,14 +88,14 @@ Now let's use read_csv to pull data from the Census into R.
 There are other options for reading in files that are tab or pipe-delimited, in .txt, .xlsx or other formats -- including SAS and Stata files, tables from a SQL database, Google sheets or the like. Note that for some of these, you'll need to download additional libraries. 
 
 ```{r read_in_data}
-census <- read_csv("ACS_17_5YR_B05002-cities.csv")
+census <- read_csv("data/grandparentsR1.csv")
 
 ```
 
 R does a pretty decent job of guessing your data types, but every once in awhile it messes them up and you'll have to rework them. For instance, check that Id2 value. You can declare specific data types for each column while using read_csv, or you can change types on individual columns. For this, let's just fix the column individually by doing:
 
 ```{r rework}
-census$Id2 <- as.character(census$Id2)
+census$id2 <- as.character(census$id2)
 ```
 
 ### Looking at your Data
@@ -103,21 +103,21 @@ Now, let's open this dataframe up and explore as we might explore an Excel sprea
 
 In your console, type:
 
-```{viewing}
+```{r viewing}
 View(census)
 ```
 
 To limit the View on a large file you can also call head with a certain number of rows, similar to LIMIT in SQL:
 
-```{view2}
-head(census, 20) %>% View()
+```{r view2}
+head(census, 5) %>% View()
 ```
 
 You can sort and filter this View, which allows you to get a basic familiarity with your dataframe. 
 
 But now let's start really digging into this to get an idea of what might be in our data. Summary -- which is part of base R -- isn't a bad place to start looking at things, particularly if you have a lot of numbers, because it returns minimum and maximum values for each column, as well as averages and medians. 
 
-```{summary}
+```{r summary}
 summary(census)
 ```
 
@@ -125,109 +125,132 @@ summary(census)
 
 OK, that's great and all, but it's still really hard to understand what we're looking at. This data isn't tidy! There are lots of different demographic group breakdowns per row -- we don't have just one observation in each row.
 
-Let's tidy things up using gather. This is a somewhat complex operation, so you don't need to totally understand how it works right now, but basically we're reshaping our data, so that the basic information (FIPS codes, city name and total population) are attached to each individual observation (the breakdowns of the type of population and the count of that group).  We're creating an individual row based on columns 5 - 30 of our dataframe. 
+Let's tidy things up using a function called "pivot_longer" (which has recently replaced a similar function called "gather" that you will still see in tutorials that are more than about a year old.) 
 
-Where data in Excel is usually wide, this makes our data long. The opposite of gather is spread, and it can work to make tables wide, with multiple observations per row if you so desire. Ron Campbell's R3 class will cover gather and spread in more detail.
+This is a somewhat complex operation, so you don't need to totally understand how it works right now, but basically we're reshaping our data, so that the basic information (FIPS codes, city name and total population) are attached to each individual observation (the breakdowns of the type of population and the count of that group).  We're creating an individual row based on columns 5 - 9 of our dataframe. 
+
+Where data in Excel is usually wide, this makes our data long. The opposite of gather is spread, and it can work to make tables wide, with multiple observations per row if you so desire.
 
 ```{r tidydata}
-citypop <- census %>% gather("type", "Population" = (5:30))
+#grandparents <- census %>% pivot_longer(cols = (5:9), names_to ="type", values_to = "pop_in_category")
+
 ```
 
-Open that file up with View(citypop). You'll see that now your datafram has a LOT more rows -- 1,066 of them to be exact -- but a lot fewer columns (only six). Now that things are tidy, we can really start to explore.
+Open that file up with View(grandparents). You'll see that now your datafram has a LOT more rows -- 320 of them to be exact -- but a fewer columns (only five). Now that things are tidy, we can really start to explore.
 
 ### Sanity-checking
 
-You want to make sure the data is OK and you don't have duplicates. So let's look at the number of unique Geographies in this 1,066 row datatable.  The number should match the rows in your original census dataframe.
+You want to make sure the data is OK and you don't have duplicate parishes.
 
 ```{r count1}
-citypop %>% distinct(Geography) %>% count()
+census %>% distinct(Geography) %>% count()
 ```
 
-You can also use count to see how many of a certain thing meets your filter criteria. Here, let's see how many cities have a total population above 100,000:
+You can also use count to see how many of a certain thing meets your filter criteria. Here, let's see how many parishes have more than 100,000 people:
 
 ```{r count2}
-citypop %>% filter(Total>100000) %>% distinct(Geography) %>% count()
+census %>% filter(TotalPop>100000) %>% distinct(Geography) %>% count()
 ```
 ### Filtering and arranging your data
 
 You're probably familiar with filtering from Excel, or from using "WHERE" statements in SQL. This is similar.
 
-Let's find the populations born inside California by city. Note that filtering on strings and characters requires a double equal sign.
+ Note that filtering on strings and characters requires a double equal sign.
 
 ```{r filtering}
-citypop %>% 
-  filter(type == "Native_Born_in_state_of_residence") 
+census %>% 
+  filter(Geography == "West Feliciana Parish, Louisiana") 
 ```
 
-Ugh! The county total is also in there. That throws everything off.
 
-Let's get rid of that in the same filter by using '!=', which means 'not equal.'  Filtering also takes numerical operators such as < or >.
+### Removing and adding columns: Select & Mutate functions
 
-```{r filtering2}
-citypop %>% 
-  filter(type == "Native_Born_in_state_of_residence", Id2 != "6059") 
+While the filter() function in R allows you to see only certain rows, the select() function lets you see only certain columns.
+
+```{r selecting}
+census %>% 
+  filter(Geography == "West Feliciana Parish, Louisiana")  %>%
+  select(Geography, TotalPop, PopOver30, Resp4GrandChildren)
+
 ```
-
-This is interesting, but it's hard to do all this math in my head. Let's go back and calculate what percentage each population group is of the whole. 
-
-### Mutating data
 
 In R, creating a new column in your data is called _Mutating_ -- basically, you're changing your dataframe by adding a new column without changing anything in your existing dataframe. 
 
 ```{r mutating}
-citypop <- citypop %>% 
-  mutate(pct = value/Total)
+census %>% 
+  mutate(pct = Resp4GrandChildren/PopOver30)
+
 ```
 
-If you'd like you can take a look again in View(citypop). Much better. Now we can see what share each group is of the whole.
+Sometimes its useful to create a new dataframe from once you've added and removed the columns you want for your final analysis. Here we'll create a dataframe called census_focused.
 
-Let's go back to that filter statement now. And since we don't want to have to go in and sort every time, so let's make it so the smallest share of California-born residents is on top.
+```{r}
+census_focused <- census %>% 
+  mutate(pct = Resp4GrandChildren/PopOver30) %>%
+  select(Geography, TotalPop, PopOver30, Resp4GrandChildren, pct)
+```
+
+
+And since we don't want to have to go in and sort every time, so let's make it so the greatest share of grandparents caring for grandchildren is on top.
 
 ```{r filterarrange}
-citypop %>% 
-  filter(type == "Native_Born_in_state_of_residence", Id2 != "6059") %>% 
-  arrange(pct) 
+census_focused %>% 
+  arrange(-pct) 
 ```
 
 ## Summarize
 
-Inside the summarize (or summarise) function there are many basic math operators -- including mean, median, minimum, maximum and sum. Let's find out what the typical Orange County city's native-born population looks like, as a share of the total population, and find the maximum and minimum among the cities.
+Inside the summarize (or summarise) function there are many basic math operators -- including mean, median, minimum, maximum and sum. For all of Louisiana's 64 parishes, let's find out what's the minimum, maximum and median percent of grandparents who are raising their grandchildren.
 
 ```{r summarise}
-citypop %>% 
-  filter(type == "Native_Born_in_state_of_residence", Id2 != "6059") %>% 
+census_focused  %>% 
   summarise(Median = median(pct), Minimum = min(pct), Maximum = max(pct))
 ```
 
-## Filtering and Summing exercise
 
-So we're working on a story and wanting to send reporters out to cities in Orange County where there are a high concentration of residents who were born in Asian countries. It doesn't matter to us whether they are citizens or not for this story, we're  just looking at the total foreign born population from Asia. 
+## Creating and comparing groups
 
-How would we get to that data?  
+So we're working on a story and only want to look at parishes around New Orleans. And then maybe compare the New Orleans region to the rest of the state.
 
-First we'll need to filter to isolate the right population groups. Then we'll need to tell R to group by the geography, and finally we'll have to add up citizen and non-citizen counts to get at the total Asian-born population.
+How do we do that?
+
+First we'll need to filter to isolate the right parishes. Then we'll need to tell R to then add up the total population and the care-giving grandparents for all the parishes in each group.
 
 There's a lot going on here, so let's break it down:
 
-First, the filter.  If you want to combine any group of things in R, you put brackets around them and delineate them with a 'c' -- so here, we're saying let's filter by choosing these two types of populations. 
+First, the filter.  If you want to combine any group of things in R, you put parentheses around them and delineate them with a 'c' -- so here, we're saying let's filter by choosing these two types of populations. 
 
-You could also write _filter(type == "Foreign_born_Naturalized_U.S._citizen__Asia", type == "Foreign_born_Not_a_U.S._citizen__Asia")_ but that involves more typing, so why?
+Rather than writing _filter(Geography == "Orleans Parish, Louisiana", Geography == "St. Bernard Parish, Louisiana", Geography == "St. Tammany Parish, Louisiana", Geography == "Jefferson Parish, Louisiana", Geography == "Plaquemines Parish, Louisiana")_ we're going to create a new variable, which will be the set of parishes in the New Orleans region.
 
-Next: Similar to how we'd GROUP BY in SQL, we're telling R to group all our findings by each individual city.
+```{r}
+NOLA_region <- c("Orleans Parish, Louisiana", "St. Bernard Parish, Louisiana", "St. Tammany Parish, Louisiana", "Jefferson Parish, Louisiana", "Plaquemines Parish, Louisiana")
+```
 
-Then: We're telling R to do math with Summarize(). So we're telling R to add up the percentage of Asian citizens and non-citizens for each city, and to put those numbers in columns we're calling 'tot_pct' and 'pop_sum'
 
-Finally: We're arranging our data by that 'tot_pct' column, with the largest value on top, so we immediately know where to send our reporters.
+Next: Once we've created this collection of parishes that we're calling "NOLA_region" we need to create a new column and store in that column information about whether the parish is in the New Orleans region or in the rest of the state. We can create these new categorical variables using the case_when() function. 
+
+In the case_when function you will see the _~_, which can be read as "then".
+
+You will also see a new operator called _%in%_ . We use this when we want to ask if a value is equal to any one of many values. And we also see the _!_ operator. You may know that this means "not", but in R the _!_ operator can sometimes go in places you're not accustomed to seeing it.
+
+So this can be read as: 
+1. "Start with the census dataframe ...
+2. "and create a new column called region ...
+3. "and insert "NOLA Region" as the value of the new region column anytime the value of the Geography column is in the set of values in NOLA_Region. ...
+4. "and if the value isn't in the set, then set the value of the region column to "Rest of State" ...
+5. "and then take each row and put it into groups based on the values in the region column ... "
+6. "and then, for each group, add the values of PopOver30 and Resp4GrandChildren. Put those summary values into new columns called RegionalPopOver30 and RegionalResp4GrandChildren ...
+7. "and then divide RegionalResp4GrandChildren by RegionalPopOver30 and save that result in yet another new column called regional_pct"
 
 #### The code:
 ```{r exercise}
-citypop %>%
-  filter(type == 
-           c("Foreign_born_Naturalized_U.S._citizen__Asia", 
-             "Foreign_born_Not_a_U.S._citizen__Asia")) %>% 
-  group_by(Geography) %>%
-  summarize(tot_pct = sum(pct), 
-            pop_sum = sum(value)) %>% 
-  arrange(-tot_pct)
+regional <- census %>%
+    mutate(region = 
+             case_when(Geography %in% NOLA_region ~ "NOLA Region", !(Geography %in% NOLA_region) ~ "Rest of State") ) %>%
+  group_by(region) %>%
+  summarize(RegionalPopOver30 = sum(PopOver30), RegionalResp4GrandChildren = sum(Resp4GrandChildren)) %>%
+  mutate(regional_pct = RegionalResp4GrandChildren / RegionalPopOver30)
+
 ```
+
 
