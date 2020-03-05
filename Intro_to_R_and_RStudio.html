@@ -427,7 +427,7 @@ summary {
 ##   Resp4GrandChildren_30to59 = col_double(),
 ##   Resp4GrandChildren_Over60 = col_double()
 ## )</code></pre>
-<p>R does a pretty decent job of guessing your data types, but every once in awhile it messes them up and you’ll have to rework them. For instance, check that Id2 value. You can declare specific data types for each column while using read_csv, or you can change types on individual columns. For this, let’s just fix the column individually by doing:</p>
+<p>R does a pretty decent job of guessing your data types, but every once in awhile it messes them up and you’ll have to rework them. For instance, check that id2 value. You can declare specific data types for each column while using read_csv, or you can change types on individual columns. For this, let’s just fix the column individually by doing:</p>
 <pre class="r"><code>census$id2 &lt;- as.character(census$id2)</code></pre>
 </div>
 <div id="looking-at-your-data" class="section level3">
@@ -468,7 +468,7 @@ summary {
 <p>Let’s tidy things up using a function called “pivot_longer” (which has recently replaced a similar function called “gather” that you will still see in tutorials that are more than about a year old.)</p>
 <p>This is a somewhat complex operation, so you don’t need to totally understand how it works right now, but basically we’re reshaping our data, so that the basic information (FIPS codes, city name and total population) are attached to each individual observation (the breakdowns of the type of population and the count of that group). We’re creating an individual row based on columns 5 - 9 of our dataframe.</p>
 <p>Where data in Excel is usually wide, this makes our data long. The opposite of gather is spread, and it can work to make tables wide, with multiple observations per row if you so desire.</p>
-<pre class="r"><code>#grandparents &lt;- census %&gt;% pivot_longer(cols = (5:9), names_to =&quot;type&quot;, values_to = &quot;pop_in_category&quot;)</code></pre>
+<pre class="r"><code>grandparents &lt;- census %&gt;% pivot_longer(cols = (5:9), names_to =&quot;type&quot;, values_to = &quot;pop_in_category&quot;)</code></pre>
 <p>Open that file up with View(grandparents). You’ll see that now your datafram has a LOT more rows – 320 of them to be exact – but a fewer columns (only five). Now that things are tidy, we can really start to explore.</p>
 </div>
 <div id="sanity-checking" class="section level3">
@@ -533,7 +533,7 @@ summary {
   select(Geography, TotalPop, PopOver30, Resp4GrandChildren, pct)</code></pre>
 <p>And since we don’t want to have to go in and sort every time, so let’s make it so the greatest share of grandparents caring for grandchildren is on top.</p>
 <pre class="r"><code>census_focused %&gt;% 
-  arrange(-pct) </code></pre>
+  arrange(desc(pct)) </code></pre>
 <pre><code>## # A tibble: 64 x 5
 ##    Geography                    TotalPop PopOver30 Resp4GrandChildren    pct
 ##    &lt;chr&gt;                           &lt;dbl&gt;     &lt;dbl&gt;              &lt;dbl&gt;  &lt;dbl&gt;
