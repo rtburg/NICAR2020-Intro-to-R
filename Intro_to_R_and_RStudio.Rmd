@@ -92,7 +92,7 @@ census <- read_csv("data/grandparentsR1.csv")
 
 ```
 
-R does a pretty decent job of guessing your data types, but every once in awhile it messes them up and you'll have to rework them. For instance, check that Id2 value. You can declare specific data types for each column while using read_csv, or you can change types on individual columns. For this, let's just fix the column individually by doing:
+R does a pretty decent job of guessing your data types, but every once in awhile it messes them up and you'll have to rework them. For instance, check that id2 value. You can declare specific data types for each column while using read_csv, or you can change types on individual columns. For this, let's just fix the column individually by doing:
 
 ```{r rework}
 census$id2 <- as.character(census$id2)
@@ -132,7 +132,7 @@ This is a somewhat complex operation, so you don't need to totally understand ho
 Where data in Excel is usually wide, this makes our data long. The opposite of gather is spread, and it can work to make tables wide, with multiple observations per row if you so desire.
 
 ```{r tidydata}
-#grandparents <- census %>% pivot_longer(cols = (5:9), names_to ="type", values_to = "pop_in_category")
+grandparents <- census %>% pivot_longer(cols = (5:9), names_to ="type", values_to = "pop_in_category")
 
 ```
 
@@ -195,7 +195,7 @@ And since we don't want to have to go in and sort every time, so let's make it s
 
 ```{r filterarrange}
 census_focused %>% 
-  arrange(-pct) 
+  arrange(desc(pct)) 
 ```
 
 ## Summarize
