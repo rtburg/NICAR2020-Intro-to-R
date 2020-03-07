@@ -86,6 +86,7 @@ Instead of telling our read_csv function the local file path, we can tell it the
 Go to the [GitHub repo](https://github.com/rtburg/NICAR2020-Intro-to-R) for this course. Go into the Data folder. Click on grandparentsR1.csv. Click the raw button. Copy the URL for the raw CSV.  
 
 ```{r}
+# http://bit.ly/r3_data
 # Define an object that has the URL 
 grandparents_url <-'https://raw.githubusercontent.com/rtburg/NICAR2020-Intro-to-R/master/data/grandparentsR1.csv'
 
@@ -101,6 +102,7 @@ Using the method above, pull in the data and store it as an object called opioid
 
 ```{r}
 # Define an object that has the URL 
+# http://bit.ly/r3_data
 opioids_url <-'https://raw.githubusercontent.com/rtburg/NICAR2020-Intro-to-R/master/data/opioids.csv'
 
 # Pass the grandparents_url to our read_csv function and store it as an object.
@@ -119,6 +121,7 @@ If we use our web browser to inspect element, we see it's an html table.  Which 
 First, let's use the read_html function in rvest to pull in the raw html content from the page, and store it as an object called grandparents_scrape. 
 
 ```{r}
+# http://bit.ly/r3_data
 grandparents_scrape <-read_html("https://github.com/rtburg/NICAR2020-Intro-to-R/blob/master/data/grandparentsR1.csv")
 ```
 
@@ -134,7 +137,6 @@ grandparents_scrape <- read_html("https://github.com/rtburg/NICAR2020-Intro-to-R
 We can examine the results in the environment window.  It kept the table head and table body, but it's kinda unreadable. Luckily, we can use the html_table() convenience function to clean it up. header=1 says to use the first row as a header. 
 
 ```{r}
-
 grandparents_scrape <- read_html("https://github.com/rtburg/NICAR2020-Intro-to-R/blob/master/data/grandparentsR1.csv") %>%
   html_nodes('table') %>%
   html_table(header=1) 
