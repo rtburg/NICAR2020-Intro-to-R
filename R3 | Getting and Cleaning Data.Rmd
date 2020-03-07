@@ -40,6 +40,7 @@ Then, create a new R script file (File -> New File -> R Script) and save it in t
 ### Loading Libraries
 
 We'll need to load several packages for this class.  They are:
+
 * The [Tidvyerse](https://www.tidyverse.org/) collection of packages. We'll be making extensive use of the readr, dplyr and stringr packages,which all load as part of the tidyverse core.  
 * The [rvest](http://rvest.tidyverse.org/) package for web scraping
 * The [janitor](https://github.com/sfirke/janitor) package for data cleaning 
