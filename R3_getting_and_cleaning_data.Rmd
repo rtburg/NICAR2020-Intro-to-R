@@ -45,11 +45,15 @@ We'll need to load several packages for this class.  They are:
 * The [rvest](http://rvest.tidyverse.org/) package for web scraping
 * The [janitor](https://github.com/sfirke/janitor) package for data cleaning 
 
+
+
 ```{r}
 library(tidyverse)
 library(rvest)
 library(janitor)
 
+
+# setwd()
 ```
 
 ### Loading Local Data
@@ -59,9 +63,16 @@ If you've taken earlier classes in this sequence, you'll have a good sense of ho
 We're going to read in the same data set we've been working with in earlier classes, of grandparents in Louisiana counties who are living with or are responsible for their grandchildren. 
 
 Let's read in the data now, and store it as an object called grandparents_local
+grandparents_local <- read_csv("data/grandparentsR1.csv")
 
 ```{r}
-grandparents_local <- read_csv("data/grandparentsR1.csv")
+# Note: the path may be different on class pcs
+# grandparents_local <- read_csv("data/grandparentsR1.csv")
+
+# This is most likely the path on the NICAR-IRE pcs
+
+grandparents_local <- read_csv("C:/Users/user/Desktop/hands_on_classes/r_3_gathering_and_cleaning_data_repeat_1088/data/grandparentsR1.csv")
+
 ```
 
 You can now view it in the environment window. 
