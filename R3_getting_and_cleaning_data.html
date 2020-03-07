@@ -438,18 +438,14 @@ $(document).ready(function () {
 <pre><code>## The following object is masked from 'package:readr':
 ## 
 ##     guess_encoding</code></pre>
-<pre class="r"><code>library(janitor)
-
-
-# setwd()</code></pre>
+<pre class="r"><code>library(janitor)</code></pre>
 </div>
 <div id="loading-local-data" class="section level3">
 <h3>Loading Local Data</h3>
 <p>If you’ve taken earlier classes in this sequence, you’ll have a good sense of how to load data locally using the read_csv() function from the readr package.</p>
 <p>We’re going to read in the same data set we’ve been working with in earlier classes, of grandparents in Louisiana counties who are living with or are responsible for their grandchildren.</p>
 <p>Let’s read in the data now, and store it as an object called grandparents_local grandparents_local &lt;- read_csv(“data/grandparentsR1.csv”)</p>
-<pre class="r"><code># Note: the path may be different on class pcs
- grandparents_local &lt;- read_csv(&quot;data/grandparentsR1.csv&quot;)</code></pre>
+<pre class="r"><code>grandparents_local &lt;- read_csv(&quot;data/grandparentsR1.csv&quot;)</code></pre>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   id = col_character(),
@@ -462,9 +458,6 @@ $(document).ready(function () {
 ##   Resp4GrandChildren_30to59 = col_double(),
 ##   Resp4GrandChildren_Over60 = col_double()
 ## )</code></pre>
-<pre class="r"><code># This is most likely the path on the NICAR-IRE pcs
-
-# grandparents_local &lt;- read_csv(&quot;C:/Users/user/Desktop/hands_on_classes/r_3_gathering_and_cleaning_data_repeat_1088/data/grandparentsR1.csv&quot;)</code></pre>
 <p>You can now view it in the environment window.</p>
 </div>
 <div id="downloading-data-from-the-internet" class="section level3">
@@ -472,8 +465,7 @@ $(document).ready(function () {
 <p>If our CSV is not on our local machine, but exists on the internet, the process for getting it works pretty similarly as loading it locally.</p>
 <p>Instead of telling our read_csv function the local file path, we can tell it the file path on the web.</p>
 <p>Go to the <a href="https://github.com/rtburg/NICAR2020-Intro-to-R">GitHub repo</a> for this course. Go into the Data folder. Click on grandparentsR1.csv. Click the raw button. Copy the URL for the raw CSV.</p>
-<pre class="r"><code># http://bit.ly/r3_data
-# Define an object that has the URL 
+<pre class="r"><code># Define an object that has the URL 
 grandparents_url &lt;-'https://raw.githubusercontent.com/rtburg/NICAR2020-Intro-to-R/master/data/grandparentsR1.csv'
 
 # Pass the grandparents_url to our read_csv function and store it as an object.
@@ -494,7 +486,6 @@ grandparents_download &lt;-read_csv(grandparents_url)</code></pre>
 <p>In the data folder for the <a href="https://github.com/rtburg/NICAR2020-Intro-to-R">GitHub repo</a> for this course, there’s a file called opioids.csv that has opioid death rates by county.</p>
 <p>Using the method above, pull in the data and store it as an object called opioids_download.</p>
 <pre class="r"><code># Define an object that has the URL 
-# http://bit.ly/r3_data
 opioids_url &lt;-'https://raw.githubusercontent.com/rtburg/NICAR2020-Intro-to-R/master/data/opioids.csv'
 
 # Pass the grandparents_url to our read_csv function and store it as an object.
@@ -513,8 +504,7 @@ opioids_download &lt;-read_csv(opioids_url)</code></pre>
 <p>Fortunately, the handy rvest package makes it easy to scrape that data into a format we can work with in R. If you go to the <a href="https://github.com/rtburg/NICAR2020-Intro-to-R">GitHub repo</a> for this course, then into the data folder, then click on grandparentsR1.csv, we see an html table that contains the information we’ve been working with on grandparents caring for grandchildren.</p>
 <p>If we use our web browser to inspect element, we see it’s an html table. Which means it should be fairly trivial to scrape it.</p>
 <p>First, let’s use the read_html function in rvest to pull in the raw html content from the page, and store it as an object called grandparents_scrape.</p>
-<pre class="r"><code># http://bit.ly/r3_data
-grandparents_scrape &lt;-read_html(&quot;https://github.com/rtburg/NICAR2020-Intro-to-R/blob/master/data/grandparentsR1.csv&quot;)</code></pre>
+<pre class="r"><code>grandparents_scrape &lt;-read_html(&quot;https://github.com/rtburg/NICAR2020-Intro-to-R/blob/master/data/grandparentsR1.csv&quot;)</code></pre>
 <p>In our environment window, we see it comes in as a “nested list”. We can examine it in our environment window, and see it’s structured like an HTML page.</p>
 <p>Now, let’s strip out all the junk we don’t want, and just keep the thing we want: the table with our info.</p>
 <pre class="r"><code>grandparents_scrape &lt;- read_html(&quot;https://github.com/rtburg/NICAR2020-Intro-to-R/blob/master/data/grandparentsR1.csv&quot;) %&gt;%

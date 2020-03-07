@@ -67,11 +67,11 @@ grandparents_local <- read_csv("data/grandparentsR1.csv")
 
 ```{r}
 # Note: the path may be different on class pcs
- grandparents_local <- read_csv("data/grandparentsR1.csv")
+# grandparents_local <- read_csv("data/grandparentsR1.csv")
 
 # This is most likely the path on the NICAR-IRE pcs
 
-# grandparents_local <- read_csv("C:/Users/user/Desktop/hands_on_classes/r_3_gathering_and_cleaning_data_repeat_1088/data/grandparentsR1.csv")
+grandparents_local <- read_csv("C:/Users/user/Desktop/hands_on_classes/r_3_gathering_and_cleaning_data_repeat_1088/data/grandparentsR1.csv")
 
 ```
 
