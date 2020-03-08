@@ -3,8 +3,8 @@ title: 'NICAR 2020 - R1: Intro to R and RStudio'
 author: "Meghan Hoyer & Ryan Thornburg"
 date: "3/7/2020"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -21,7 +21,7 @@ R is going to help you do more complex analyses in an easier way. But there is s
 The most popular of R packages is a suite of about 20 tools known as the tidyverse. It was developed largely by Hadley Wickham, chief scientist at RStudio, the graphical user interface for R. The tidyverse includes tools for importing, manipulating, editing and visualizing data and is based around a basic principle: that data be tidy, with one observation, or data point, in each row.
 "When your data is tidy, each column is a variable, and each row is an observation."
 
-If you're looking for more resources or next steps to help you learn, [here](https://github.com/roncampbell/NICAR2019/blob/master/R%20reading%20list.md) is a pretty comprehensive list of RStudio + R resources, including books, tipsheets and webinars compiled by Ron Campbell and Meghan Hoyer. 
+If you're looking for more resources or next steps to help you learn, [here](https://github.com/roncampbell/NICAR2019/blob/master/R%20reading%20list.md) is a pretty comprehensive list of RStudio + R resources, including books, tipsheets and webinars compiled by Ron Campbell and me. 
 
 ### First up: The basics of RStudio
 
